@@ -5,6 +5,7 @@ import {Sheet, SheetContent, SheetTrigger} from "@/components/ui/sheet";
 
 import UserMenu from "@/components/user-menu";
 import {createClient} from "@/utils/supabase/server";
+import {ModeToggle} from "@/components/mode-toggle";
 
 async function UserAuth() {
     const supabase = createClient();
@@ -105,6 +106,9 @@ export default function NavigationBar() {
                             />
                         </div>
                     </form>
+
+                    <ModeToggle />
+
                     <UserAuth />
                 </div>
             </header>

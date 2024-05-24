@@ -20,7 +20,7 @@ export default function ArticleList({articles} : ArticlesListProps ) {
     }
 
     return (
-        <section className="w-full py-12 md:py-24 lg:py-32 bg-blue-400/50">
+        <section className="w-full py-12 md:py-24 lg:py-32">
             <div className="container grid gap-8 px-4 md:px-6 max-w-6xl mx-auto">
                 <div className="space-y-3">
                     <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">Tech</h2>
