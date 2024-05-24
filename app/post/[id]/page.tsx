@@ -11,8 +11,7 @@ interface PostProps {
 
 export default async function Page({ params } : PostProps ) {
 
-    const cookieStore = cookies()
-    const supabase = createClient(cookieStore)
+    const supabase = createClient()
 
     const { data: article } = await supabase.from("articles").select().eq("id", params.id).single()
 
