@@ -18,17 +18,21 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-      <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-      >
-          <NavigationBar />
-          {children}
-        </ThemeProvider>
-      </body>
+    <body className={inter.className}>
+    <ThemeProvider
+        attribute="class"
+        defaultTheme="system"
+        enableSystem
+        disableTransitionOnChange
+    >
+        <NavigationBar/>
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            {children}
+        </div>
+    </ThemeProvider>
+
+
+    </body>
     </html>
   );
 }

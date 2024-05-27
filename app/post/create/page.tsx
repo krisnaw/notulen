@@ -2,99 +2,113 @@
 import {Input} from "@/components/ui/input";
 import {Textarea} from "@/components/ui/textarea";
 import {Button} from "@/components/ui/button";
-import {SubmitHandler, useForm, useFormState} from "react-hook-form"
-import {z} from "zod";
-import {zodResolver} from "@hookform/resolvers/zod";
-import {useFormStatus} from "react-dom"
-import {useState} from "react";
+import {create} from "@/app/actions/article/actions";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import {EditorState, EditorView, useCodeMirror, ViewUpdate} from "@uiw/react-codemirror";
+import {useCallback, useEffect, useMemo, useRef, useState} from "react";
 
-type FormInputs = {
-    title: string;
-    content: string;
+interface markdownProps {
+    doc: null | string;
+    setDoc: React.Dispatch<React.SetStateAction<string>>;
 }
 
-type InputType = z.input<typeof schema>;
-type OutputType = z.output<typeof schema>;
+const useMarkdownEditor = ({doc, setDoc} : markdownProps ) => {
+    const editor = useRef(null); // EditorViewの親要素のref
+    const [container, setContainer] = useState<HTMLDivElement>();
+    const [view, setView] = useState<EditorView>();
 
-const schema = z.object({
-    title: z.string().min(1),
-    content: z.string().min(1)
-})
+
+    const updateListener = useMemo(() => {
+        return EditorView.updateListener.of((update: ViewUpdate) => {
+            if (update.docChanged) {
+                setDoc(update.state.doc.toString());
+            }
+        })
+    }, [setDoc])
+
+    useEffect(() => {
+        if (editor.current) {
+            setContainer(editor.current);
+        }
+    }, [setContainer]);
+
+    useEffect(() => {
+        if (!view && container) {
+            const state = EditorState.create();
+            const viewCurrent = new EditorView({
+                state,
+                parent: container,
+            });
+            setView(viewCurrent);
+        }
+    }, [view, container, doc, updateListener]);
+
+    return {
+        editor
+    };
+};
 
 export default function Page() {
+    const [doc, setDoc] = useState<null | string>(null);
+    const safe = useCallback(() => {
+        // TODO: Save the document to supabase
+    }, [])
+    const { editor } = useMarkdownEditor({doc, setDoc});
 
-    const [loading, setLoading] = useState<boolean>(false)
-
-    const {
-        register,
-        handleSubmit,
-        setError,
-        formState: {errors, isLoading}
-    } = useForm<InputType, any, OutputType>({
-        resolver: zodResolver(schema),
-        defaultValues: {
-            title: "",
-            content: ""
-        }
-    });
-
-
-    const onSubmit: SubmitHandler<OutputType> = async (data: FormInputs) => {
-
-        setLoading(true)
-
-        try {
-            const responses = fetch("/api/article/", {
-                method: "POST",
-                body: JSON.stringify(data)
-            })
-
-        } catch (err) {
-            console.log(err);
-        }
-
-        setLoading(false)
-    }
-
-    const {pending} = useFormStatus()
 
     return (
         <div>
             <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
                 Create new article
             </h4>
+
+            <div>
+
+                <div>
+                    <Tabs defaultValue="account" className="w-[400px]">
+                        <TabsList>
+                            <TabsTrigger value="account">Writing</TabsTrigger>
+                            <TabsTrigger value="password">Preview</TabsTrigger>
+                        </TabsList>
+                        <TabsContent value="account">
+
+                            <div className="overflow-hidden bg-white shadow">
+                                <div className="p-10">
+                                    <div ref={editor}/>
+                                </div>
+                            </div>
+
+
+                        </TabsContent>
+                        <TabsContent value="password">
+
+                        </TabsContent>
+                    </Tabs>
+
+                </div>
+
+
+            </div>
+
             <div className="mt-4">
-                <form onSubmit={handleSubmit(onSubmit)}>
+                <form action={create}>
                     <div className="grid grid-cols-1 gap-4">
                         <div>
-                            <Input autoFocus
-                                   {...register('title')}
-                                   name="title" type="text" placeholder="Title"/>
-
-                            <p className="text-sm text-muted-foreground mt-2">
-                                {errors.title && <p>{errors.title.message}</p>}
-                            </p>
+                            <Input autoFocus name="title" type="text" placeholder="Title"/>
                         </div>
 
                         <div>
-                            <Textarea
-                                {...register('content')}
-                                name="content" placeholder="Description"/>
-                            <p className="text-sm text-muted-foreground mt-2">
-                                {errors.content && <p>{errors.content.message}</p>}
-                            </p>
+                            <Textarea name="content" placeholder="Description"/>
                         </div>
 
                         <div>
-                            <Button type="submit" disabled={loading}>
-                                {loading ? "Creating..." : "Save"}
+                            <Button type="submit">
+                                Save
                             </Button>
                         </div>
                     </div>
                 </form>
             </div>
-
-
         </div>
     )
 }

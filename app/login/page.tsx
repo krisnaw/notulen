@@ -5,12 +5,7 @@ import {Card, CardHeader, CardTitle, CardDescription, CardContent} from "@/compo
 import {Label} from "@/components/ui/label";
 import {Input} from "@/components/ui/input";
 
-export default function Login({
-                                  searchParams,
-                              }: {
-    searchParams: { message: string };
-}) {
-
+export default function Login() {
     return (
         <div className="min-h-screen flex flex-col justify-center items-center">
 
