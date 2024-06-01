@@ -1,5 +1,7 @@
 'use client'
 import ArticleDetail from "@/components/article-detail";
+import {Button} from "@/components/ui/button";
+import Link from "next/link";
 
 interface Article {
     id: string
@@ -14,10 +16,6 @@ interface ArticlesListProps {
 
 
 export default function ArticleList({articles} : ArticlesListProps ) {
-
-    if(!articles?.length){
-        return <p>No posts found.</p>
-    }
 
     return (
         <section className="w-full py-12 md:py-24 lg:py-32">

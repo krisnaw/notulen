@@ -7,7 +7,7 @@ import {Input} from "@/components/ui/input";
 
 export default function Login() {
     return (
-        <div className="min-h-screen flex flex-col justify-center items-center">
+        <div className="flex items-center justify-center">
 
             <form>
                 <Card className="mx-auto max-w-sm">
@@ -20,6 +20,16 @@ export default function Login() {
                     <CardContent>
                         <div className="grid gap-4">
 
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="grid gap-2">
+                                    <Label htmlFor="first-name">First name</Label>
+                                    <Input id="first-name" name="firstName" placeholder="Max" required/>
+                                </div>
+                                <div className="grid gap-2">
+                                    <Label htmlFor="last-name">Last name</Label>
+                                    <Input id="last-name" name="lastName" placeholder="Robinson" required/>
+                                </div>
+                            </div>
                             <div className="grid gap-2">
                                 <Label htmlFor="email">Email</Label>
                                 <Input
@@ -37,7 +47,7 @@ export default function Login() {
                                     name="password"
                                     placeholder="••••••••"
                                     required
-                                    id="password" />
+                                    id="password"/>
                             </div>
                             <SubmitButton
                                 formAction={signIn}
